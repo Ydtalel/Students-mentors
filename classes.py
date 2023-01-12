@@ -17,7 +17,7 @@ class Student:
             average = sum(grades_lst) / len(grades_lst)
         else:
             average = sum(grades_lst)
-        return average
+        return f" средняя оценка за домашние задания: {average}"
 
     def __le__(self, other):
         return self.find_average() <= other.find_average()
@@ -26,7 +26,8 @@ class Student:
         return self.find_average() >= other.find_average()
 
     def feedback(self, lecturer, course, grade):
-        if isinstance(lecturer, Lecturer) and lecturer.courses_attached == self.courses_in_progress:
+        if isinstance(lecturer,
+                      Lecturer) and course in lecturer.courses_attached and course in self.courses_in_progress:
             if course in lecturer.grades:
                 lecturer.grades[course] += [grade]
             else:
@@ -36,9 +37,9 @@ class Student:
 
     def __str__(self):
         average = self.find_average()
-        return f" Имя: {self.name}\n Фамилия: {self.surname}\n Средняя оценка за домашние задания: " \
-               f"{average}\n Курсы в процессе изучения: {''.join(self.courses_in_progress)}\n" \
-               f" Завершенные курсы: {''.join(self.finished_courses)}"
+        return f" Имя: {self.name}\n Фамилия: {self.surname}\n " \
+               f"{average}\n Курсы в процессе изучения: {' '.join(self.courses_in_progress)}\n" \
+               f" Завершенные курсы: {' '.join(self.finished_courses)}"
 
 
 class Mentor:
@@ -63,7 +64,7 @@ class Lecturer(Mentor):
             average = sum(grades_lst) / len(grades_lst)
         else:
             average = sum(grades_lst)
-        return average
+        return f"Средняя оценка за лекции: {average}"
 
     def __le__(self, other):
         return self.find_average() <= other.find_average()
@@ -73,13 +74,15 @@ class Lecturer(Mentor):
 
     def __str__(self):
         average = self.find_average()
-        return f" Имя: {self.name}\n Фамилия: {self.surname}\n " \
-               f"Средняя оценка за лекции: {average}"
+        return f" Имя: {self.name}\n Фамилия: {self.surname}\n {average}"
 
 
 class Reviewer(Mentor):
+    reviewers = []
+
     def __init__(self, name, surname):
         super().__init__(name, surname)
+        Reviewer.reviewers.append(self)
 
     def __str__(self):
         return f" Имя: {self.name}\n Фамилия: {self.surname}"
